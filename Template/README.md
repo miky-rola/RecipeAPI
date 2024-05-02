@@ -52,7 +52,7 @@ Create a .env file in the project root directory.
 
 ### Run the Flask application:
 
-flask run
+`flask run`
 
 
 ## API Documentation
