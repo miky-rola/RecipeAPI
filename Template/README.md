@@ -35,7 +35,7 @@ Create a .env file in the project root directory.
 
 ### Define the following environment variables:
 
-*import load_dotenv from dotenv and import os to be able to load it from the .env*
+*`from dotenv import load_dotenv` and `import os` to be able to load it from the .env*
 
 `HOSTNAME=os.getenv("your_database_hostname")`
 
