@@ -84,7 +84,7 @@ Create, retrieve, update, or delete reviews using the appropriate endpoints.
 
 Contributing
 
-Contributions are welcome! If you'd like to contribute to the development of the Recipe API, please follow these steps:
+Contributions are welcome! If you would like to contribute to the development of the Recipe API, please follow these steps:
 
 Fork the repository.
 
