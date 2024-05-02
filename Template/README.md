@@ -22,15 +22,21 @@ Clone the repository:
 
 git clone https://github.com/your_username/recipe-api.git
 
+
 Install dependencies:
 
 pip install -r requirements.txt
 
+
 Set up environment variables:
+
 Create a .env file in the project root directory.
 
+
 Define the following environment variables:
+
 import load_dotenv from dotenv and import os to be able to load it from the .env
+
 HOSTNAME=your_database_hostname
 
 DATABASE=os.getenv("your_database_name")
