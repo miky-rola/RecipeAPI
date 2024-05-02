@@ -1,4 +1,4 @@
-Recipe API
+Recipe API:
 The Recipe API is a RESTful web service built with Flask and SQLAlchemy, allowing users to manage recipes, tags, and user accounts. It provides endpoints for creating, updating, deleting, and retrieving recipes, as well as authentication and authorization features for user management.
 
 Features
