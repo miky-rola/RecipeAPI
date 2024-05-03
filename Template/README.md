@@ -93,7 +93,7 @@ Create a .env file in the project root directory.
   }`
 
 - Log out using /logout
-- 
+ 
   `DELETE http://127.0.0.1:5000/logout HTTP/1.1
   content-type: application/json`
   
@@ -108,6 +108,7 @@ Create a .env file in the project root directory.
 - Use the provided token for authentication in subsequent requests.
 
   Create, retrieve, update, or delete recipes using the appropriate endpoints.
+  
   **creating recipe**
   
     `POST http://127.0.0.1:5000/recipes/create HTTP/1.1
@@ -127,10 +128,12 @@ Create a .env file in the project root directory.
   }`
 
    **Retrieve Recipes**
+  
     `GET http://127.0.0.1:5000/recipes HTTP/1.1
       content-type: application/json`
 
   **Response**
+  
   ` {
       "created_at": "2024-05-03 07:11:34",
       "ingredients": "Rice and beans",
