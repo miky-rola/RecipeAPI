@@ -64,24 +64,24 @@ Create a .env file in the project root directory.
 - Register a new user account using the /users endpoint.
     
   `POST http://127.0.0.1:5000/users HTTP/1.1
-    content-type: application/json
-  
-  {
+    content-type: application/json`
+  `{
       "username": "eva",
       "password": "123"
   }`
   
   **Respone**
+  
   `{
     "message": "User created successfully",
     "user_id": 3
   }`
   
 - log in using  /login endpoint.
-    `POST http://127.0.0.1:5000/login HTTP/1.1
-  content-type: application/json
   
-  {
+    `POST http://127.0.0.1:5000/login HTTP/1.1
+  content-type: application/json`
+  `{
       "username": "eva",
       "password": "123"
   }`
@@ -93,9 +93,12 @@ Create a .env file in the project root directory.
   }`
 
 - Log out using /logout
+- 
   `DELETE http://127.0.0.1:5000/logout HTTP/1.1
   content-type: application/json`
+  
   **Response**
+  
   `{
   "message": "Logged out successfully"
   }`
@@ -106,16 +109,18 @@ Create a .env file in the project root directory.
 
   Create, retrieve, update, or delete recipes using the appropriate endpoints.
   **creating recipe**
-    `POST http://127.0.0.1:5000/recipes/create HTTP/1.1
-    content-type: application/json
   
-  {
+    `POST http://127.0.0.1:5000/recipes/create HTTP/1.1
+    content-type: application/json`
+  
+  `{
       "recipe_name": "Waakye",
       "ingredients": "Rice and beans",
       "instructions": "Put on fire"
   }`
   
   **Response**
+  
   `{
     "message": "Recipe created successfully",
     "recipe_id": 3
@@ -145,31 +150,38 @@ Create a .env file in the project root directory.
 - Tag recipes with categories using the /tags endpoint.
 
  Create, retrieve, update, or delete tags using the appropriate endpoints.
+ 
  **create tags**
+ 
  `POST http://127.0.0.1:5000/recipes/3/tags HTTP/1.1
-  content-type: application/json
+  content-type: application/json`
 
-{
+`{
     "tag_name": "best recipe tag"
 }`
+
 **Response**
-{
+
+`{
   "message": "Tag created successfully"
-}
+}`
  
 
 - Leave reviews for recipes using the /reviews endpoint.
 
    Create, retrieve, update, or delete reviews using the appropriate endpoints.
-   **creating a review**
-   `POST http://127.0.0.1:5000/recipes/3/reviews HTTP/1.1
-    content-type: application/json
   
-  {
+   **creating a review**
+  
+   `POST http://127.0.0.1:5000/recipes/3/reviews HTTP/1.1
+    content-type: application/json`
+  
+  `{
       "review_content": "I love it"
   }`
   
   **Response**
+  
   `{
     "message": "Review added successfully"
   }`
