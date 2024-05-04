@@ -20,7 +20,7 @@ The Recipe API is a RESTful web service built with Flask and SQLAlchemy, allowin
 
 #### Clone the repository:
 
-`git clone https://github.com/your_username/recipe-api.git`
+`git clone https://github.com/miky-rola/recipe-api.git`
 
 
 #### Install dependencies:
@@ -60,6 +60,8 @@ Create a .env file in the project root directory.
 #### API Reference: Detailed documentation for all available endpoints and their usage.
 
 ### Usage
+
+ **Tested the endpoints using the RESTFUL API Extension**
 
 - Register a new user account using the /users endpoint.
     
