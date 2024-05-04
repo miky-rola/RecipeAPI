@@ -2,6 +2,25 @@
 
 The Recipe API is a RESTful web service built with Flask and SQLAlchemy, allowing users to manage recipes, tags, and user accounts. It provides endpoints for creating, updating, deleting, and retrieving recipes, as well as authentication and authorization features for user management.
 
+## Files
+- `app.py`: Main file containing the application's routes and controllers.
+  
+- `models.py`: Contains database models for the application.
+  
+- `user.py`: Handles user-related functionalities.
+  
+- `recipe.py`: Manages recipe creation, editing, and retrieval.
+  
+- `reviews.py`: Handles review functionalities for recipes.
+  
+- `tags.py`: Manages tagging functionalities for recipes and files.
+- 
+## Setup
+
+1. Set up the database by running: `python models.py`
+   
+2. Start the application: `python app.py`
+  
 ## Features
 
 **User Authentication**: Users can create accounts, log in, log out, and delete their accounts securely.
@@ -190,6 +209,13 @@ Create a .env file in the project root directory.
   `{
     "message": "Review added successfully"
   }`
+
+## Technologies Used
+- Python
+  
+- Flask
+  
+- SQLAlchemy
 
 
 ## Contributing
