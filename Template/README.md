@@ -14,7 +14,7 @@ The Recipe API is a RESTful web service built with Flask and SQLAlchemy, allowin
 - `reviews.py`: Handles review functionalities for recipes.
   
 - `tags.py`: Manages tagging functionalities for recipes and files.
-- 
+
 ## Setup
 
 1. Set up the database by running: `python models.py`
@@ -82,7 +82,7 @@ Create a .env file in the project root directory.
 
  **Tested the endpoints using the RESTFUL API Extension**
 
-- Register a new user account using the /users endpoint.
+- **Register a new user** account using the /users endpoint.
     
   `POST http://127.0.0.1:5000/users HTTP/1.1
     content-type: application/json`
@@ -98,7 +98,7 @@ Create a .env file in the project root directory.
     "user_id": 3
   }`
   
-- log in using  /login endpoint.
+- **log in** using  /login endpoint.
   
     `POST http://127.0.0.1:5000/login HTTP/1.1
   content-type: application/json`
@@ -113,7 +113,7 @@ Create a .env file in the project root directory.
     "message": "Login successful"
   }`
 
-- Log out using /logout
+- **Log out** using /logout
  
   `DELETE http://127.0.0.1:5000/logout HTTP/1.1
   content-type: application/json`
@@ -128,7 +128,7 @@ Create a .env file in the project root directory.
 
 - Use the provided token for authentication in subsequent requests.
 
-  Create, retrieve, update, or delete recipes using the appropriate endpoints.
+- **Create, retrieve, update, or delete recipes** using the appropriate endpoints.
   
   **creating recipe**
   
@@ -171,7 +171,7 @@ Create a .env file in the project root directory.
     }`
   
 
-- Tag recipes with categories using the /tags endpoint.
+- **Tag recipes** with categories using the /tags endpoint.
 
  Create, retrieve, update, or delete tags using the appropriate endpoints.
  
@@ -191,7 +191,7 @@ Create a .env file in the project root directory.
 }`
  
 
-- Leave reviews for recipes using the /reviews endpoint.
+- **Leave reviews** for recipes using the /reviews endpoint.
 
    Create, retrieve, update, or delete reviews using the appropriate endpoints.
   
@@ -210,7 +210,11 @@ Create a .env file in the project root directory.
     "message": "Review added successfully"
   }`
 
+- **Uploading Files**: Use the file upload functionality provided by `app.py`.
+
+
 ## Technologies Used
+
 - Python
   
 - Flask
