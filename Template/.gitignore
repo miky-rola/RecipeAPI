@@ -1,2 +1,6 @@
 .env
 recipe.rest
+Include
+Lib
+Scripts
+pyvenv.cfg

@@ -59,6 +59,29 @@ def login():
     else:
         return jsonify({"message": "Invalid username or password"}), 401
 
+@user_blueprint.route("/users/<int:user_id>", methods=["PUT"])
+@login_required
+def update_user(user_id):
+    """Update user information."""
+    data = request.get_json()
+    user = Users.query.get(user_id)
+
+    # Check if the user exists
+    if not user:
+        return jsonify({"message": "User not found"}), 404
+
+    # Update user information
+    if "username" in data:
+        user.username = data["username"]
+    if "password" in data:
+        user.password = data["password"]
+
+    # Commit changes to the database
+    db.session.commit()
+
+    return jsonify({"message": "User updated successfully"}), 200
+
+
 @user_blueprint.route("/users", methods=["DELETE"])
 @login_required
 def delete_user():
