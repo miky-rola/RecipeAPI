@@ -90,9 +90,15 @@ def create_recipe():
 @recipe_blueprint.route("/recipes", methods=["GET"])
 @login_required
 def get_all_recipes():
-    """Get all recipes."""
-    # Query all recipes from database
-    recipes = Recipe.query.all()
+    """Get all recipes or search for recipes by name."""
+    search_term = request.args.get("search", "")
+    # Query recipes from the database based on search term
+    if search_term:
+        # Use SQLalchemy's `ilike` for case-insensitive search
+        recipes = Recipe.query.filter(Recipe.recipe_name.ilike(f"%{search_term}%")).all()
+    else:
+        recipes = Recipe.query.all()
+
     recipes_data = []
     # Iterate over each recipe to construct response data
     for recipe in recipes:
@@ -112,7 +118,6 @@ def get_all_recipes():
         recipes_data.append(recipe_data)
     # Return list of recipes
     return jsonify({"recipes": recipes_data}), 200
-
 
 
 @recipe_blueprint.route("/recipes/<int:recipe_id>", methods=["GET"])
