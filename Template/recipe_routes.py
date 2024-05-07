@@ -1,4 +1,5 @@
 from flask import Blueprint, jsonify, request, session
+from sqlalchemy import or_
 from Template.models import Recipe, db, Tag, Users, Review
 from functools import wraps
 
@@ -87,12 +88,19 @@ def create_recipe():
         return jsonify({"message": "An error occurred while creating the recipe"}), 500
 
 
+
 @recipe_blueprint.route("/recipes", methods=["GET"])
 @login_required
 def get_all_recipes():
-    """Get all recipes."""
-    # Query all recipes from database
-    recipes = Recipe.query.all()
+    """Get all recipes or search for recipes by name."""
+    search_term = request.args.get("search", "")
+    # Query recipes from the database based on search term
+    if search_term:
+        # Use SQLalchemy's `ilike` for case-insensitive search
+        recipes = Recipe.query.filter(Recipe.recipe_name.ilike(f"%{search_term}%")).all()
+    else:
+        recipes = Recipe.query.all()
+
     recipes_data = []
     # Iterate over each recipe to construct response data
     for recipe in recipes:
@@ -112,6 +120,7 @@ def get_all_recipes():
         recipes_data.append(recipe_data)
     # Return list of recipes
     return jsonify({"recipes": recipes_data}), 200
+
 
 
 
