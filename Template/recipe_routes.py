@@ -92,19 +92,30 @@ def create_recipe():
 def get_all_recipes():
     """Get all recipes or search for recipes by name."""
     search_term = request.args.get("search", "")
+    specific_name = request.args.get("name")
+    
+    # Check if both search and name parameters are provided
+    if specific_name and search_term:
+        return jsonify({"error": "Please provide only one of 'search' or 'name' parameters."}), 400
+
     # Query recipes from the database based on search term
-    if search_term:
-        # Use SQLalchemy's `ilike` for case-insensitive search
-        recipes = Recipe.query.filter(Recipe.recipe_name.ilike(f"%{search_term}%")).all()
+    if specific_name:
+        recipes = Recipe.query.filter(Recipe.recipe_name.ilike(f"%{specific_name}%")).all()
+    elif search_term:
+        # Query recipes based on the general search term across multiple fields
+        recipes = Recipe.query.filter(
+            or_(
+                Recipe.recipe_name.ilike(f"%{search_term}%"),
+                Recipe.ingredients.ilike(f"%{search_term}%"),
+                Recipe.tags.any(Tag.tag_name.ilike(f"%{search_term}%"))
+            )
+        ).all()
     else:
         recipes = Recipe.query.all()
 
     recipes_data = []
     # Iterate over each recipe to construct response data
     for recipe in recipes:
-        # Print out tags for debugging
-        print("Recipe Tags:", [tag.tag_name for tag in recipe.tags])
-        
         recipe_data = {
             "recipe_id": recipe.id,
             "recipe_name": recipe.recipe_name,
@@ -112,7 +123,7 @@ def get_all_recipes():
             "instructions": recipe.instructions,
             "created_at": recipe.created_at.strftime("%Y-%m-%d %H:%M:%S"),
             "user": recipe.user.username,
-            "reviews": [review.review_content for review in recipe.recipe_reviews],
+            "reviews": [review.review_content for review in recipe.reviews],
             "tags": [tag.tag_name for tag in recipe.tags]
         }
         recipes_data.append(recipe_data)
@@ -128,7 +139,7 @@ def get_recipe_details(recipe_id):
     recipe = Recipe.query.get(recipe_id)
     if not recipe:
         return jsonify({"message": "Recipe not found"}), 404
-    # Construct response data for the recipe
+        
     recipe_data = {
         "recipe_name": recipe.recipe_name,
         "ingredients": recipe.ingredients,
@@ -149,7 +160,7 @@ def delete_recipe(recipe_id):
     recipe = Recipe.query.get(recipe_id)
     if not recipe:
         return jsonify({"message": "Recipe not found"}), 404
-    # Delete recipe from database
+
     db.session.delete(recipe)
     db.session.commit()
     # Return success message
