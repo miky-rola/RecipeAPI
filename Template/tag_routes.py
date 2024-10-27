@@ -1,4 +1,8 @@
-from flask import Blueprint, jsonify, request
+from flask import (
+    Blueprint, 
+    jsonify, 
+    request
+)
 from models import Tag, db, Recipe
 from user_routes import token_required
 

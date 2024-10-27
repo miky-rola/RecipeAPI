@@ -1,4 +1,8 @@
-from flask import Blueprint, jsonify, request
+from flask import (
+    Blueprint, 
+    jsonify, 
+    request
+)
 from models import Users, db, app
 from bcrypt import checkpw
 from functools import wraps
@@ -83,11 +87,8 @@ def login():
     password = data["password"]
     user = Users.query.filter_by(username=username).first()
     if user and checkpw(password.encode("utf-8"), user.password.encode("utf-8")):
-        # Create a JWT token with expiry time
-        expiry_time = datetime.utcnow() + timedelta(days=1)  # Token expires in 1 day
+        expiry_time = datetime.utcnow() + timedelta(days=1)  
         token = jwt.encode({"user_id": user.id, "exp": expiry_time}, app.config["SECRET_KEY"], algorithm=Algorithms)
-
-        # decoded_token = token.decode("utf-8")
 
         return jsonify({"message": "Login successful", "token": token, "expires_at": expiry_time}), 200
     else:

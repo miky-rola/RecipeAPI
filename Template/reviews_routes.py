@@ -1,5 +1,15 @@
-from flask import Blueprint, jsonify, request, session
-from models import Review, Recipe, Users, db
+from flask import (
+    Blueprint, 
+    jsonify, 
+    request, 
+    session
+)
+from models import (
+    Review, 
+    Recipe, 
+    Users, 
+    db
+)
 from user_routes import token_required
 
 review_blueprint = Blueprint("review_blueprint", __name__)

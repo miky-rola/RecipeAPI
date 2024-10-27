@@ -1,7 +1,16 @@
-
-from flask import Blueprint, jsonify, request
+from flask import (
+    Blueprint, 
+    jsonify, 
+    request
+)
 from sqlalchemy import or_
-from models import Recipe, db, Tag, Users, Review
+from models import (
+    Recipe, 
+    db, 
+    Tag, 
+    Users,
+    Review
+)
 from user_routes import token_required
 
 recipe_blueprint = Blueprint("recipe_blueprint", __name__)
