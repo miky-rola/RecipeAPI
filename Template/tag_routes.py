@@ -1,32 +1,13 @@
 from flask import Blueprint, jsonify, request, session
-from Template.models import Tag, db, Recipe, recipe_tags
-from functools import wraps
-
+from models import Tag, db, Recipe, recipe_tags
+from user_routes import token_required
 # Creating a Blueprint for tag-related routes
 tag_blueprint = Blueprint("tag_blueprint", __name__)
 
 
-def login_required(f):
-    """
-    Decorator function to check if the user is logged in.
-
-    Args:
-        f (function): The function to be decorated.
-
-    Returns:
-        function: The decorated function.
-    """
-    @wraps(f)
-    def decorated_function(*args, **kwargs):
-        if "user_id" not in session:
-            # If user is not logged in, return 401 Unauthorized
-            return jsonify({"message": "Please log in to access this"}), 401
-        return f(*args, **kwargs)
-    return decorated_function
-
 
 @tag_blueprint.route("/recipes/<int:recipe_id>/tags", methods=["POST"])
-@login_required
+@token_required
 def create_tag(recipe_id):
     """Create a new tag for a specific recipe."""
     data = request.get_json()
@@ -58,7 +39,7 @@ def create_tag(recipe_id):
 
 
 @tag_blueprint.route("/tags/<int:tag_id>", methods=["GET"])
-@login_required
+@token_required
 def get_tag(tag_id):
     """Get details of a specific tag."""
     tag = Tag.query.get(tag_id)
@@ -80,7 +61,7 @@ def get_tag(tag_id):
 
 
 @tag_blueprint.route("/tags/<int:tag_id>", methods=["PUT"])
-@login_required
+@token_required
 def update_tag(tag_id):
     """Update a tag."""
     tag = Tag.query.get(tag_id)
@@ -95,7 +76,7 @@ def update_tag(tag_id):
 
 
 @tag_blueprint.route("/tags/<int:tag_id>", methods=["DELETE"])
-@login_required
+@token_required
 def delete_tag(tag_id):
     """Delete a tag."""
     tag = Tag.query.get(tag_id)

@@ -1,31 +1,13 @@
 from flask import Blueprint, jsonify, request, session
-from Template.models import Review, Recipe, Users, db
-from functools import wraps
-from datetime import datetime
+from models import Review, Recipe, Users, db
+from user_routes import token_required
 
 # Creating a Blueprint for review-related routes
 review_blueprint = Blueprint("review_blueprint", __name__)
 
-def login_required(f):
-    """
-    Decorator function to check if the user is logged in.
-
-    Args:
-        f (function): The function to be decorated.
-
-    Returns:
-        function: The decorated function.
-    """
-    @wraps(f)
-    def decorated_function(*args, **kwargs):
-        if "user_id" not in session:
-            # If user is not logged in, return 401 Unauthorized
-            return jsonify({"message": "Please log in to access this"}), 401
-        return f(*args, **kwargs)
-    return decorated_function
 
 @review_blueprint.route("/recipes/<int:recipe_id>/reviews", methods=["POST"])
-@login_required
+@token_required
 def leave_review(recipe_id):
     """Leave a review for a recipe."""
     try:
@@ -60,7 +42,7 @@ def leave_review(recipe_id):
     
 
 @review_blueprint.route("/recipes/<string:recipe_name>/reviews", methods=["GET"])
-@login_required
+@token_required
 def get_recipe_reviews(recipe_name):
     """Get all reviews for a specific recipe."""
     recipe = Recipe.query.filter_by(recipe_name=recipe_name).first()
@@ -87,7 +69,7 @@ def get_recipe_reviews(recipe_name):
     return jsonify({"reviews": review_data}), 200
 
 @review_blueprint.route("/reviews/<int:review_id>", methods=["DELETE"])
-@login_required
+@token_required
 def delete_review(review_id):
     """Delete a review."""
     review = Review.query.get(review_id)

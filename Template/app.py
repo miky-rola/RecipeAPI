@@ -4,7 +4,7 @@ from user_routes import user_blueprint
 from recipe_routes import recipe_blueprint
 from tag_routes import tag_blueprint
 from reviews_routes import review_blueprint
-from Template.models import app, db
+from models import app, db
 
 # Initialize Flask-Migrate
 migrate = Migrate(app, db)

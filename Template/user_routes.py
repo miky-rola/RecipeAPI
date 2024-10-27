@@ -1,32 +1,62 @@
-from flask import Blueprint, jsonify, request, session
-from Template.models import Users, db
+from flask import Blueprint, jsonify, request
+from models import Users, db, app
 from bcrypt import checkpw
 from functools import wraps
+from dotenv import load_dotenv
+import os
+import jwt
+from datetime import datetime, timedelta
 
-# Creating a Blueprint for user-related routes
+load_dotenv()
+
+
 user_blueprint = Blueprint("user_blueprint", __name__)
 
-def login_required(f):
-    """
-    Decorator function to check if the user is logged in.
+Algorithms = os.getenv("algo_key")
+secret_key = os.getenv("SECURITY")
 
-    Args:
-        f (function): The function to be decorated.
+app.config["SECRET_KEY"] = secret_key
 
-    Returns:
-        function: The decorated function.
-    """
+
+def token_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
-        if "user_id" not in session:
-            return jsonify({"message": "Please log in to access this"}), 401
+        token = request.headers.get("Authorization")
+        if not token:
+            return jsonify({"message": "Missing token"}), 401
+
+        if not token.startswith("Bearer "):
+            return jsonify({"message": "Invalid token format. Token must start with 'Bearer'"}), 401
+        
+        available_token = token.split(" ")
+        if len(available_token) != 2:
+            return jsonify({"message": "Invalid token format. Token must be provided after 'Bearer'"}), 401
+
+        token = available_token[1]
+
+        try:
+            data = jwt.decode(token, app.config["SECRET_KEY"], algorithms=[Algorithms])
+
+            user_id = data["user_id"]
+            request.user_id = user_id
+
+        except jwt.ExpiredSignatureError:
+            print("Token has expired") 
+            return jsonify({"message": "Token has expired"}), 401
+        except jwt.InvalidTokenError as error:
+            print(f"Invalid token: {error}")  
+            return jsonify({"message": "Invalid token"}), 401
+
         return f(*args, **kwargs)
+
     return decorated_function
+
 
 
 @user_blueprint.route("/users", methods=["POST"])
 def create_user():
     """Create a new user."""
+    
     data = request.get_json()
     if "username" not in data or "password" not in data:
         return jsonify({"message": "Both username and password are required"}), 400
@@ -38,12 +68,11 @@ def create_user():
     if existing_user:
         return jsonify({"message": "Username already exists"}), 409
 
-    # Creating a new user in the database
     new_user = Users(username=username, password=password)
     db.session.add(new_user)
     db.session.commit()
-    # Return the user_id in the response
-    return jsonify({"message": "User created successfully", "user_id": new_user.id}), 201
+
+    return jsonify({"message": "User created successfully", "User ID": Users.id}), 201
 
 
 @user_blueprint.route("/login", methods=["POST"])
@@ -54,49 +83,28 @@ def login():
     password = data["password"]
     user = Users.query.filter_by(username=username).first()
     if user and checkpw(password.encode("utf-8"), user.password.encode("utf-8")):
-        session["user_id"] = user.id  # Store user_id in session
-        return jsonify({"message": "Login successful"}), 200
+        # Create a JWT token with expiry time
+        expiry_time = datetime.utcnow() + timedelta(days=1)  # Token expires in 1 day
+        token = jwt.encode({"user_id": user.id, "exp": expiry_time}, app.config["SECRET_KEY"], algorithm=Algorithms)
+
+        # decoded_token = token.decode("utf-8")
+
+        return jsonify({"message": "Login successful", "token": token, "expires_at": expiry_time}), 200
     else:
         return jsonify({"message": "Invalid username or password"}), 401
 
-@user_blueprint.route("/users/<int:user_id>", methods=["PUT"])
-@login_required
-def update_user(user_id):
-    """Update user information."""
-    data = request.get_json()
-    user = Users.query.get(user_id)
-
-    # Check if the user exists
-    if not user:
-        return jsonify({"message": "User not found"}), 404
-
-    # Update user information
-    if "username" in data:
-        user.username = data["username"]
-    if "password" in data:
-        user.password = data["password"]
-
-    # Commit changes to the database
-    db.session.commit()
-
-    return jsonify({"message": "User updated successfully"}), 200
-
 
 @user_blueprint.route("/users", methods=["DELETE"])
-@login_required
-def delete_user():
+@token_required
+def delete_user(user_id):
     """Delete user"""
-    user_id = session["user_id"]
     user = Users.query.get(user_id)
     db.session.delete(user)
     db.session.commit()
-    session.pop("user_id", None)
     return jsonify({"message": "User deleted successfully"}), 200
 
-
 @user_blueprint.route("/logout", methods=["DELETE"])
-@login_required
-def logout():
+@token_required
+def logout(user_id):
     """Log out the current user."""
-    session.pop("user_id", None)  # Remove user_id from the session
     return jsonify({"message": "Logged out successfully"}), 200

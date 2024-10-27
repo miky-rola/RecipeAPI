@@ -55,7 +55,7 @@ class Users(db.Model):
             password (str): The password of the user.
         """
         self.username = username
-        self.password = hashpw(password.encode("utf-8"), gensalt(9)).decode("utf-8")  # Hash password during initialization
+        self.password = hashpw(password.encode("utf-8"), gensalt()).decode("utf-8")  # Hash password during initialization
 
 class Recipe(db.Model):
     """
