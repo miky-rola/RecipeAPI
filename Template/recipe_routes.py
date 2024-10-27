@@ -124,7 +124,7 @@ def get_recipe_details(recipe_id):
     recipe = Recipe.query.get(recipe_id)
     if not recipe:
         return jsonify({"message": "Recipe not found"}), 404
-    # Construct response data for the recipe
+        
     recipe_data = {
         "recipe_name": recipe.recipe_name,
         "ingredients": recipe.ingredients,
@@ -145,7 +145,7 @@ def delete_recipe(recipe_id):
     recipe = Recipe.query.get(recipe_id)
     if not recipe:
         return jsonify({"message": "Recipe not found"}), 404
-    # Delete recipe from database
+
     db.session.delete(recipe)
     db.session.commit()
     # Return success message
